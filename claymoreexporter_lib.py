@@ -23,6 +23,10 @@ def validIP(ip):
 # {u'result': [u'11.3 - ETH', u'676', u'116239;459;0', u'29161;29163;27806;30108', u'0;0;0', u'off;off;off;off', u'64;40;67;40;65;43;73;33', u'eu1.nanopool.org:9999', u'0;0;0;0'], u'id': 0, u'error': None}
 
 def netcat(hostname, port, content):
+
+    # ethminer needs this
+    content = content + '\n'
+
     """ Netcat equivalent to get data from Claymore. Normal http get doesn't works."""
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -40,6 +44,9 @@ def netcat(hostname, port, content):
             if data == "":
                 break
             fulltext += data
+
+        if fulltext == '':
+            raise Exception('No reponse from miner')
     except socket.error, e:
         fulltext='{"error": true, "id": 0, "result": ["No client", "6", "0;0;0", "0;0", "0;0;0", "0;0", "0;0;0;0", "-;--", "0;0;0;0"]}'
         print "Socket error: ", e
